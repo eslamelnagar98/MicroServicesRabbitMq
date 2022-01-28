@@ -3,13 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Bus\" />
-    <Folder Include="Commands\" />
-    <Folder Include="Events\" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
   </ItemGroup>
 
 </Project>
