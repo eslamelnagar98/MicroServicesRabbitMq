@@ -51,7 +51,7 @@ namespace MicroRabbitMq.Infra.Bus
             var eventName = typeof(T).Name;
             var handlerType = typeof(THandler);
 
-            if (!_eventTypes.Any(type => type.GetType() == typeof(T)))
+            if (!_eventTypes.Any(type => type == typeof(T)))
                 _eventTypes.Add(typeof(T));
 
             if (!_handlers.TryGetValue(eventName, out _))
@@ -113,9 +113,20 @@ namespace MicroRabbitMq.Infra.Bus
             }
         }
 
-        private Task ProcessEvent(string eventName, string message)
+        private async Task ProcessEvent(string eventName, string message)
         {
-            throw new NotImplementedException();
+            if (_handlers.TryGetValue(eventName, out List<Type> subscriptions))
+            {
+                foreach (var subscription in subscriptions)
+                {
+                    var handler = Activator.CreateInstance(subscription);
+                    if (handler is null) continue;
+                    var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
+                    var @event = JsonSerializer.Deserialize(message, eventType);
+                    var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
+                    await (Task)concreteType.GetMethod("Handle")?.Invoke(handler, new[] { @event }); 
+                }
+            }
         }
 
 
