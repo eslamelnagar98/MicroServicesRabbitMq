@@ -17,6 +17,7 @@ namespace MicroRabbitMq.Infra.Bus
         const string Url = "amqp://Islam:12345@192.168.1.3:5672/";
 
 
+
         public RabbitMQBus(IMediator mediator)
         {
             _mediator = mediator;
@@ -85,7 +86,8 @@ namespace MicroRabbitMq.Infra.Bus
         {
             var factory = new ConnectionFactory()
             {
-                Uri = new Uri(Url),
+                //Uri = new Uri(Url),
+                HostName = "localhost",
                 DispatchConsumersAsync = consumeAsync
             };
 
@@ -124,7 +126,7 @@ namespace MicroRabbitMq.Infra.Bus
                     var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
                     var @event = JsonSerializer.Deserialize(message, eventType);
                     var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
-                    await (Task)concreteType.GetMethod("Handle")?.Invoke(handler, new[] { @event }); 
+                    await (Task)concreteType.GetMethod("Handle")?.Invoke(handler, new[] { @event });
                 }
             }
         }
