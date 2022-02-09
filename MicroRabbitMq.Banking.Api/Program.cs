@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddbankingDb(builder.Configuration);
+builder.Services.AddDbConnection<BankingDbContext>(builder.Configuration);
 builder.Services.Register();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,7 +34,7 @@ static void ApplyMigrations(WebApplication app)
 {
     using (var scope = app.Services.CreateScope())
     {
-        var bankingDbContext = scope.ServiceProvider.GetRequiredService<BankingDbContext>();
+        var bankingDbContext = scope.ApplyDbMigrations<BankingDbContext>();
         bankingDbContext.Database.Migrate();
     }
 }

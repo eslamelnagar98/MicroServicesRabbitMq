@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-
-namespace MicroServiceRabbitMQ.Transfer.Api.Controllers
+namespace MicroServiceRabbitMQ.MicroServices.Transfer.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

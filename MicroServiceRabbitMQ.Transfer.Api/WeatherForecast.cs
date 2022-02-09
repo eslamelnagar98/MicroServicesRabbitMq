@@ -1,4 +1,4 @@
-namespace MicroServiceRabbitMQ.Transfer.Api
+namespace MicroServiceRabbitMQ.MicroServices.Transfer.Api
 {
     public class WeatherForecast
     {

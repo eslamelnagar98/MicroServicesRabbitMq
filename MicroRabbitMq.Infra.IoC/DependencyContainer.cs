@@ -23,7 +23,7 @@ namespace MicroRabbitMq.Infra.IoC
             services.AddTransient<IEventBus, RabbitMQBus>();
 
             //Domain Banking Commands 
-            services.AddTransient<IRequestHandler<CreateTransferCommand,bool>, TransferCommandHandler>();
+            services.AddTransient<IRequestHandler<CreateTransferCommand, bool>, TransferCommandHandler>();
 
             //Application Services 
             services.AddTransient<IAccountService, AccountService>();
@@ -33,15 +33,26 @@ namespace MicroRabbitMq.Infra.IoC
             services.AddTransient<BankingDbContext>();
         }
 
-        public static void AddbankingDb(this IServiceCollection services, IConfiguration configuration)
+        public static void AddDbConnection<TEntity>(
+            this IServiceCollection services,
+            IConfiguration configuration)
+            where TEntity : DbContext
         {
-            services.AddDbContext<BankingDbContext>(options =>
+            services.AddDbContext<TEntity>(options =>
              {
-                 options.UseSqlServer(configuration.GetConnectionString("BankingDbConnection"))
+                 options.UseSqlServer(configuration.GetConnectionString($"{typeof(TEntity).Name}Connection"))
                         .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name },
                          LogLevel.Information)
                         .EnableSensitiveDataLogging();
              });
         }
+
+        public static TEntity ApplyDbMigrations<TEntity>(
+            this IServiceScope serviceScope)
+            where TEntity : DbContext
+        {
+            return serviceScope.ServiceProvider.GetRequiredService<TEntity>();
+        }
+
     }
 }
