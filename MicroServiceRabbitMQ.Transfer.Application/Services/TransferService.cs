@@ -19,7 +19,7 @@ namespace MicroServiceRabbitMQ.Transfer.Application.Services
 
         public IEnumerable<TransferLog> GetTransferLogs()
         {
-            throw new NotImplementedException();
+            return _transferRepository.GetTransferLogs();
         }
 
        

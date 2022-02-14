@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddDbConnection<TransferDbContext>(builder.Configuration);
-//builder.Services.Register();
+builder.Services.RegisterTransfer();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
@@ -30,6 +30,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 static void ApplyMigrations(WebApplication app)
 {
     using (var scope = app.Services.CreateScope())
